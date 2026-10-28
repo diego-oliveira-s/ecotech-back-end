@@ -1,3 +1,4 @@
+using Ecotech.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,9 @@ namespace back_end.Controllers
     [ApiController]
     public class TodoItemsController : ControllerBase
     {
-        private readonly TodoContext _context;
+        private readonly AppDbContext _context;
 
-        public TodoItemsController(TodoContext context)
+        public TodoItemsController(AppDbContext context)
         {
             _context = context;
         }

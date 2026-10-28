@@ -1,3 +1,4 @@
+using Ecotech.Data;
 using Ecotech.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,9 +9,9 @@ namespace back_end.Controllers;
 [ApiController]
 public class AdvertisementController : ControllerBase
 {
-    private readonly AdvertisementContext _context;
+    private readonly AppDbContext _context;
 
-    public AdvertisementController(AdvertisementContext context)
+    public AdvertisementController(AppDbContext context)
     {
         _context = context;
     }

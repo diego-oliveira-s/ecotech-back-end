@@ -1,34 +1,25 @@
-using Ecotech.Models;
+using Ecotech.Data;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
-using TodoApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddDbContext<TodoContext>(options =>
-    options.UseInMemoryDatabase("TodoList")
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Default"))
 );
-builder.Services.AddDbContext<ElectronicEquipmentContext>(options =>
-    options.UseInMemoryDatabase("ElectronicEquipment")
-);
-builder.Services.AddDbContext<PersonContext>(options =>
-    options.UseInMemoryDatabase("Person")
-);
-builder.Services.AddDbContext<FavoriteContext>(options =>
-    options.UseInMemoryDatabase("Favorite")
-);
-builder.Services.AddDbContext<AdvertisementContext>(options =>
-    options.UseInMemoryDatabase("Advertisement")
-);
-builder.Services.AddDbContext<IdentityContext>(options =>
-    options.UseInMemoryDatabase("Identity")
-);
-builder.Services.AddDbContext<OrderContext>(options =>
-    options.UseInMemoryDatabase("Order")
-);
+
+// Registers /register, /login, /refresh, ... and bearer-token authentication.
+builder.Services
+    .AddIdentityApiEndpoints<ApplicationUser>(options =>
+    {
+        options.User.RequireUniqueEmail = true;
+        options.Password.RequiredLength = 8;
+    })
+    .AddEntityFrameworkStores<AppDbContext>();
+builder.Services.AddAuthorization();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -44,8 +35,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapGroup("/auth").MapIdentityApi<ApplicationUser>();
 app.MapControllers();
 
 app.Run();
