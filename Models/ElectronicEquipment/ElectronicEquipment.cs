@@ -1,4 +1,7 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Ecotech.Models;
+
 
 public class ElectronicEquipment
 {
@@ -6,5 +9,7 @@ public class ElectronicEquipment
     public required string Type { get; set; }
     public required string Description { get; set; }
     public required string ImageUrl { get; set; }
-    public required string Donor { get; set; }
+
+    [Required]
+    public required Person Donor { get; set; }
 }
