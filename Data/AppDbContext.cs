@@ -1,7 +1,6 @@
 using Ecotech.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TodoApi.Models;
 
 namespace Ecotech.Data;
 
@@ -12,9 +11,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
     }
 
-    public DbSet<TodoItem> TodoItems { get; set; } = null!;
     public DbSet<ElectronicEquipment> ElectronicEquipments { get; set; } = null!;
-    public DbSet<Person> PersonItems { get; set; } = null!;
+    public DbSet<Person> People { get; set; } = null!;
     public DbSet<Favorite> Favorites { get; set; } = null!;
     public DbSet<Advertisement> Advertisements { get; set; } = null!;
     public DbSet<Order> Orders { get; set; } = null!;

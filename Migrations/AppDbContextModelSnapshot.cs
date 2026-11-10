@@ -127,7 +127,7 @@ namespace back_end.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Donor")
+                    b.Property<string>("DonorId")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -144,6 +144,8 @@ namespace back_end.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DonorId");
+
                     b.HasIndex("OrderId");
 
                     b.ToTable("ElectronicEquipments");
@@ -158,6 +160,8 @@ namespace back_end.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("UserId", "AdvertisementId");
+
+                    b.HasIndex("AdvertisementId");
 
                     b.ToTable("Favorites");
                 });
@@ -226,7 +230,7 @@ namespace back_end.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PersonItems");
+                    b.ToTable("People");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -361,28 +365,6 @@ namespace back_end.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TodoApi.Models.TodoItem", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<bool>("IsComplete")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Secret")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TodoItems");
-                });
-
             modelBuilder.Entity("Ecotech.Models.Advertisement", b =>
                 {
                     b.HasOne("Ecotech.Models.ElectronicEquipment", "ElectronicEquipment")
@@ -396,9 +378,36 @@ namespace back_end.Migrations
 
             modelBuilder.Entity("Ecotech.Models.ElectronicEquipment", b =>
                 {
+                    b.HasOne("Ecotech.Models.Person", "Donor")
+                        .WithMany()
+                        .HasForeignKey("DonorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Ecotech.Models.Order", null)
                         .WithMany("Items")
                         .HasForeignKey("OrderId");
+
+                    b.Navigation("Donor");
+                });
+
+            modelBuilder.Entity("Ecotech.Models.Favorite", b =>
+                {
+                    b.HasOne("Ecotech.Models.Advertisement", "Advertisement")
+                        .WithMany()
+                        .HasForeignKey("AdvertisementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ecotech.Models.Person", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Advertisement");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Ecotech.Models.Order", b =>
@@ -461,7 +470,7 @@ namespace back_end.Migrations
 
                             b1.HasKey("PersonId");
 
-                            b1.ToTable("PersonItems");
+                            b1.ToTable("People");
 
                             b1.WithOwner()
                                 .HasForeignKey("PersonId");
