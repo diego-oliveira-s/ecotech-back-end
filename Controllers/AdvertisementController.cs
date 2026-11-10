@@ -30,7 +30,6 @@ public class AdvertisementController : ControllerBase
 
 
         return Ok(advertisements);
-
     }
 }
 
